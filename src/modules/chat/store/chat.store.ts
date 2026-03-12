@@ -1,7 +1,6 @@
 'use client';
 import { create } from 'zustand';
 import { produce } from 'immer';
-import { v4 as uuidv4 } from 'uuid';
 import * as chatApi from '@/modules/chat/api/chat.api';
 import type { Conversation, Message, Role } from '@/modules/chat/types/chat.types';
 import { createId } from '@/lib/id';
