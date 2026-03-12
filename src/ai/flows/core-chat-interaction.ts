@@ -1,6 +1,6 @@
 'use server';
 /**
- * @fileOverview Implements the core chat interaction flow for the NextGen Chat application.
+ * @fileOverview Implements the core chat interaction flow for the ChatGPT-NextGen application.
  * This flow handles sending a user message to the AI and streaming back the AI's response in real-time.
  *
  * - coreChatInteraction - A function that initiates the chat interaction and returns a stream of AI responses.
