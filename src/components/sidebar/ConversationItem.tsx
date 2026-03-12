@@ -79,8 +79,8 @@ export function ConversationItem({ conversation, isActive }: ConversationItemPro
           className="h-7 w-full flex-grow bg-transparent p-0 text-sm focus:ring-0"
         />
       ) : (
-        <Link href={`/chat/${conversation.id}`} className="flex-grow truncate" legacyBehavior>
-          <a className="w-full">{conversation.title}</a>
+        <Link href={`/chat/${conversation.id}`} className="w-full flex-grow truncate">
+          {conversation.title}
         </Link>
       )}
 
