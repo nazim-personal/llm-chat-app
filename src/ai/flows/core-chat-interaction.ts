@@ -90,7 +90,8 @@ const coreChatInteractionFlow = ai.defineFlow(
     });
 
     for await (const chunk of stream) {
-      if (chunk.text != null) {
+      // It's possible to receive chunks that don't have text, so we need to filter them out.
+      if (typeof chunk.text === 'string') {
         yield { text: chunk.text }; // Yield each text chunk wrapped in the output schema object
       }
     }
