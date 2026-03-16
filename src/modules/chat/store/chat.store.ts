@@ -6,7 +6,7 @@ import type { Conversation, Message, Role } from '@/modules/chat/types/chat.type
 import { createId } from '@/lib/id';
 
 // This is a server action that will be called from the store
-import { coreChatInteraction } from '@/ai/flows/actions';
+import { coreChatInteraction, generateConversationTitle } from '@/ai/flows/actions';
 
 interface ChatState {
   conversations: Conversation[];
@@ -116,7 +116,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
       const stream = await coreChatInteraction({ message: content, history: history.map(m => ({ role: m.role, content: m.content })) });
 
       for await (const chunk of stream) {
-        if (chunk.text) {
+        if (chunk.text != null) {
           set(produce((state: ChatState) => {
             const msg = state.messages[activeId].find(m => m.id === assistantMessageId);
             if (msg) {
@@ -129,7 +129,16 @@ export const useChatStore = create<ChatState>((set, get) => ({
       const currentMessages = get().messages[activeId];
       // Auto-generate title after first assistant response
       if (currentMessages.length === 2) {
-        get().renameConversation(activeId, content);
+        // Fire-and-forget title generation
+        generateConversationTitle({ firstMessage: content })
+          .then(output => {
+            get().renameConversation(activeId, output.title);
+          })
+          .catch(err => {
+            console.error("Failed to generate conversation title, falling back to user's prompt.", err);
+            // Fallback to using the user's prompt as the title, since that was the original request
+            get().renameConversation(activeId, content);
+          });
       }
 
     } catch (error) {
