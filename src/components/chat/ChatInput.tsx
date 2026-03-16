@@ -5,12 +5,18 @@ import { Plus, ArrowUp, Mic, AudioLines } from 'lucide-react';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { useChat } from '@/modules/chat/hooks/useChat';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export function ChatInput() {
   const [input, setInput] = useState('');
   const { sendMessage, isStreaming, activeConversationId, createNewConversation } = useChat();
   const router = useRouter();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const [hasMounted, setHasMounted] = useState(false);
+
+  useEffect(() => {
+    setHasMounted(true);
+  }, []);
 
   useEffect(() => {
     if (textareaRef.current) {
@@ -41,6 +47,16 @@ export function ChatInput() {
       handleSubmit(e as unknown as FormEvent);
     }
   };
+
+  if (!hasMounted) {
+    return (
+      <div className="sticky bottom-0 bg-transparent pb-4 pt-2">
+        <div className="relative mx-auto max-w-3xl">
+          <Skeleton className="h-14 w-full rounded-full" />
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="sticky bottom-0 bg-transparent pb-4 pt-2">
